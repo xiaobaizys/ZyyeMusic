@@ -1,0 +1,80 @@
+[
+  {
+    "id": "1774698449882",
+    "message": "History event: saved",
+    "stack": "Error: History event: saved\n    at http://localhost:5500/js/data/DataPersistenceSystem.js:516:9\n    at http://localhost:5500/js/storage/HistoryManager.js:417:9\n    at Array.forEach (<anonymous>)\n    at HistoryManager.notifyListeners (http://localhost:5500/js/storage/HistoryManager.js:415:20)\n    at HistoryManager.saveHistory (http://localhost:5500/js/storage/HistoryManager.js:25:14)\n    at DataPersistenceSystem.saveAllData (http://localhost:5500/js/data/DataPersistenceSystem.js:527:20)\n    at http://localhost:5500/js/data/DataPersistenceSystem.js:493:12",
+    "context": {
+      "type": "history",
+      "event": "saved",
+      "data": []
+    },
+    "timestamp": "2026-03-28T11:47:29.882Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) TraeCN/1.107.1 Chrome/142.0.7444.235 Electron/39.2.7 Safari/537.36",
+    "url": "http://localhost:5500/"
+  },
+  {
+    "id": "1774698449881",
+    "message": "Playlists event: saved",
+    "stack": "Error: Playlists event: saved\n    at http://localhost:5500/js/data/DataPersistenceSystem.js:509:9\n    at http://localhost:5500/js/storage/PlaylistManager.js:461:9\n    at Array.forEach (<anonymous>)\n    at PlaylistManager.notifyListeners (http://localhost:5500/js/storage/PlaylistManager.js:459:20)\n    at PlaylistManager.savePlaylists (http://localhost:5500/js/storage/PlaylistManager.js:36:14)\n    at DataPersistenceSystem.saveAllData (http://localhost:5500/js/data/DataPersistenceSystem.js:525:22)\n    at http://localhost:5500/js/data/DataPersistenceSystem.js:493:12",
+    "context": {
+      "type": "playlists",
+      "event": "saved",
+      "data": []
+    },
+    "timestamp": "2026-03-28T11:47:29.881Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) TraeCN/1.107.1 Chrome/142.0.7444.235 Electron/39.2.7 Safari/537.36",
+    "url": "http://localhost:5500/"
+  },
+  {
+    "id": "1774698449880",
+    "message": "Favorites event: saved",
+    "stack": "Error: Favorites event: saved\n    at http://localhost:5500/js/data/DataPersistenceSystem.js:502:9\n    at http://localhost:5500/js/storage/FavoritesManager.js:272:9\n    at Array.forEach (<anonymous>)\n    at FavoritesManager.notifyListeners (http://localhost:5500/js/storage/FavoritesManager.js:270:20)\n    at FavoritesManager.saveFavorites (http://localhost:5500/js/storage/FavoritesManager.js:24:14)\n    at DataPersistenceSystem.saveAllData (http://localhost:5500/js/data/DataPersistenceSystem.js:524:22)\n    at http://localhost:5500/js/data/DataPersistenceSystem.js:493:12",
+    "context": {
+      "type": "favorites",
+      "event": "saved",
+      "data": []
+    },
+    "timestamp": "2026-03-28T11:47:29.880Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) TraeCN/1.107.1 Chrome/142.0.7444.235 Electron/39.2.7 Safari/537.36",
+    "url": "http://localhost:5500/"
+  },
+  {
+    "id": "1774698378781",
+    "message": "History event: saved",
+    "stack": "Error: History event: saved\n    at http://localhost:5500/js/data/DataPersistenceSystem.js:516:9\n    at http://localhost:5500/js/storage/HistoryManager.js:417:9\n    at Array.forEach (<anonymous>)\n    at HistoryManager.notifyListeners (http://localhost:5500/js/storage/HistoryManager.js:415:20)\n    at HistoryManager.saveHistory (http://localhost:5500/js/storage/HistoryManager.js:25:14)\n    at DataPersistenceSystem.saveAllData (http://localhost:5500/js/data/DataPersistenceSystem.js:527:20)\n    at http://localhost:5500/js/data/DataPersistenceSystem.js:493:12",
+    "context": {
+      "type": "history",
+      "event": "saved",
+      "data": []
+    },
+    "timestamp": "2026-03-28T11:46:18.781Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) TraeCN/1.107.1 Chrome/142.0.7444.235 Electron/39.2.7 Safari/537.36",
+    "url": "http://localhost:5500/"
+  },
+  {
+    "id": "1774698378780",
+    "message": "Playlists event: saved",
+    "stack": "Error: Playlists event: saved\n    at http://localhost:5500/js/data/DataPersistenceSystem.js:509:9\n    at http://localhost:5500/js/storage/PlaylistManager.js:461:9\n    at Array.forEach (<anonymous>)\n    at PlaylistManager.notifyListeners (http://localhost:5500/js/storage/PlaylistManager.js:459:20)\n    at PlaylistManager.savePlaylists (http://localhost:5500/js/storage/PlaylistManager.js:36:14)\n    at DataPersistenceSystem.saveAllData (http://localhost:5500/js/data/DataPersistenceSystem.js:525:22)\n    at http://localhost:5500/js/data/DataPersistenceSystem.js:493:12",
+    "context": {
+      "type": "playlists",
+      "event": "saved",
+      "data": []
+    },
+    "timestamp": "2026-03-28T11:46:18.780Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) TraeCN/1.107.1 Chrome/142.0.7444.235 Electron/39.2.7 Safari/537.36",
+    "url": "http://localhost:5500/"
+  },
+  {
+    "id": "1774698378779",
+    "message": "Favorites event: saved",
+    "stack": "Error: Favorites event: saved\n    at http://localhost:5500/js/data/DataPersistenceSystem.js:502:9\n    at http://localhost:5500/js/storage/FavoritesManager.js:272:9\n    at Array.forEach (<anonymous>)\n    at FavoritesManager.notifyListeners (http://localhost:5500/js/storage/FavoritesManager.js:270:20)\n    at FavoritesManager.saveFavorites (http://localhost:5500/js/storage/FavoritesManager.js:24:14)\n    at DataPersistenceSystem.saveAllData (http://localhost:5500/js/data/DataPersistenceSystem.js:524:22)\n    at http://localhost:5500/js/data/DataPersistenceSystem.js:493:12",
+    "context": {
+      "type": "favorites",
+      "event": "saved",
+      "data": []
+    },
+    "timestamp": "2026-03-28T11:46:18.779Z",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) TraeCN/1.107.1 Chrome/142.0.7444.235 Electron/39.2.7 Safari/537.36",
+    "url": "http://localhost:5500/"
+  }
+]

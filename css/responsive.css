@@ -1,0 +1,511 @@
+@media (max-width: 1200px) {
+  .nav-container {
+    gap: 20px;
+  }
+
+  .nav-search {
+    max-width: 380px;
+  }
+
+  .player {
+    gap: 20px;
+  }
+
+  .player-info {
+    min-width: 180px;
+  }
+
+  .player-controls {
+    max-width: 460px;
+  }
+}
+
+@media (max-width: 992px) {
+  .navbar {
+    padding: 12px 18px;
+  }
+
+  .nav-container {
+    flex-wrap: wrap;
+  }
+
+  .nav-brand {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  .nav-search {
+    order: 2;
+    width: 100%;
+    max-width: none;
+  }
+
+  .nav-menu {
+    order: 1;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .main-content {
+    padding: 20px;
+  }
+
+  .featured-list {
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 14px;
+  }
+
+  .player {
+    gap: 14px;
+  }
+
+  .player-info {
+    min-width: 160px;
+  }
+
+  .player-controls {
+    max-width: 380px;
+  }
+
+  .player-volume {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-brand h1 {
+    font-size: 18px;
+  }
+
+  .nav-menu {
+    gap: 4px;
+  }
+
+  .nav-item {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+
+  .main-content {
+    padding: 16px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .page-header h2 {
+    font-size: 20px;
+  }
+
+  .featured-list {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+
+  .featured-item img {
+    height: 150px;
+  }
+
+  .featured-item h3 {
+    font-size: 13px;
+  }
+
+  .featured-item p {
+    font-size: 12px;
+  }
+
+  .categories {
+    gap: 6px;
+  }
+
+  .category-btn {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+
+  .song-item,
+  .favorite-item,
+  .playlist-item,
+  .history-item {
+    padding: 12px;
+  }
+
+  .song-item img,
+  .favorite-item img,
+  .history-item img {
+    width: 48px;
+    height: 48px;
+  }
+
+  .playlist-item .playlist-cover {
+    width: 48px;
+    height: 48px;
+  }
+
+  .song-info h3,
+  .favorite-info h3,
+  .playlist-info h3,
+  .history-info h3 {
+    font-size: 13px;
+  }
+
+  .song-info p,
+  .favorite-info p,
+  .playlist-info p,
+  .history-info p {
+    font-size: 12px;
+  }
+
+  .player-container {
+    padding: 10px 16px;
+  }
+
+  .player {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .player-info {
+    min-width: 140px;
+    order: 1;
+  }
+
+  .player-controls {
+    order: 2;
+    width: 100%;
+    max-width: none;
+  }
+
+  .player-actions {
+    order: 3;
+    min-width: auto;
+  }
+
+  .player-buttons {
+    gap: 6px;
+  }
+
+  .control-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 16px;
+  }
+
+  .control-btn.play-pause {
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+  }
+
+  .player-actions .action-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 15px;
+  }
+
+  .modal-content {
+    padding: 24px;
+    width: 95%;
+  }
+}
+
+@media (max-width: 576px) {
+  .navbar {
+    padding: 10px 14px;
+  }
+
+  .nav-brand h1 {
+    font-size: 17px;
+  }
+
+  .nav-search input {
+    padding: 9px 14px;
+    font-size: 13px;
+  }
+
+  .nav-search button {
+    padding: 9px 16px;
+    font-size: 14px;
+  }
+
+  .nav-item {
+    padding: 7px 12px;
+    font-size: 12px;
+  }
+
+  .main-content {
+    padding: 14px;
+  }
+
+  .featured-section h2,
+  .categories-section h2,
+  .songs-section h2 {
+    font-size: 16px;
+    margin-bottom: 14px;
+  }
+
+  .featured-section,
+  .categories-section,
+  .songs-section {
+    margin-bottom: 28px;
+  }
+
+  .featured-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .featured-item img {
+    height: 120px;
+  }
+
+  .featured-item .featured-info {
+    padding: 12px;
+  }
+
+  .categories {
+    gap: 5px;
+  }
+
+  .category-btn {
+    padding: 7px 12px;
+    font-size: 12px;
+  }
+
+  .song-item,
+  .favorite-item,
+  .playlist-item,
+  .history-item {
+    padding: 10px;
+    gap: 12px;
+  }
+
+  .song-item img,
+  .favorite-item img,
+  .history-item img {
+    width: 44px;
+    height: 44px;
+  }
+
+  .playlist-item .playlist-cover {
+    width: 44px;
+    height: 44px;
+  }
+
+  .song-info h3,
+  .favorite-info h3,
+  .playlist-info h3,
+  .history-info h3 {
+    font-size: 12px;
+  }
+
+  .song-info p,
+  .favorite-info p,
+  .playlist-info p,
+  .history-info p {
+    font-size: 11px;
+  }
+
+  .song-actions,
+  .favorite-actions,
+  .playlist-actions,
+  .history-actions {
+    gap: 4px;
+  }
+
+  .action-btn {
+    padding: 6px;
+    font-size: 15px;
+  }
+
+  .player-container {
+    padding: 8px 12px;
+  }
+
+  .player-info {
+    min-width: 110px;
+  }
+
+  .player-cover {
+    width: 40px;
+    height: 40px;
+  }
+
+  .player-details h3 {
+    font-size: 12px;
+  }
+
+  .player-details p {
+    font-size: 11px;
+  }
+
+  .player-progress {
+    gap: 8px;
+  }
+
+  .player-progress span {
+    font-size: 11px;
+    min-width: 40px;
+  }
+
+  .progress-bar {
+    height: 3px;
+  }
+
+  .control-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 15px;
+  }
+
+  .control-btn.play-pause {
+    width: 38px;
+    height: 38px;
+    font-size: 17px;
+  }
+
+  .player-actions {
+    min-width: auto;
+    gap: 4px;
+  }
+
+  .player-actions .action-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 15px;
+  }
+
+  .modal-content {
+    padding: 20px;
+    width: 98%;
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-group label {
+    font-size: 13px;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 9px 12px;
+    font-size: 13px;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    padding: 9px 16px;
+    font-size: 13px;
+  }
+
+  .empty-state {
+    padding: 36px 24px;
+  }
+
+  .empty-state p {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 400px) {
+  .nav-brand h1 {
+    font-size: 16px;
+  }
+
+  .nav-search {
+    flex-direction: column;
+  }
+
+  .nav-search input {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  .nav-search button {
+    width: 100%;
+  }
+
+  .nav-menu {
+    gap: 3px;
+  }
+
+  .nav-item {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .featured-list {
+    grid-template-columns: 1fr;
+  }
+
+  .player-info {
+    min-width: 90px;
+  }
+
+  .player-cover {
+    width: 36px;
+    height: 36px;
+  }
+
+  .player-details h3 {
+    font-size: 11px;
+  }
+
+  .player-details p {
+    font-size: 10px;
+  }
+
+  .control-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+  }
+
+  .control-btn.play-pause {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+
+  .player-actions .action-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  .navbar,
+  .player-container,
+  .player-actions,
+  .song-actions,
+  .favorite-actions,
+  .playlist-actions,
+  .history-actions {
+    display: none !important;
+  }
+
+  .main-content {
+    padding: 0;
+  }
+
+  .song-item,
+  .favorite-item,
+  .playlist-item,
+  .history-item {
+    page-break-inside: avoid;
+  }
+}
