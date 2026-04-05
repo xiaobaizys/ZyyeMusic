@@ -33,6 +33,18 @@ class PerformanceOptimizer {
       const target = e.target
       let handled = false
 
+      // 跳过上传相关的按钮和区域,让它们的原生事件正常工作
+      const uploadRelatedElement = target.closest('#uploadArea, #selectAudioBtn, #selectCoverBtn, #selectLyricsBtn, #cancelUploadBtn, #confirmUploadBtn, .upload-section, .upload-form-section')
+      if (uploadRelatedElement) {
+        return
+      }
+      
+      // 跳过进度条和音量滑块,让它们的原生事件正常工作
+      const sliderElement = target.closest('#progressSlider, #volumeSlider, #fullscreenProgressSlider, #fullscreenVolumeSlider')
+      if (sliderElement) {
+        return
+      }
+
       const playBtn = target.closest('.play-btn, .play-fav-btn, .play-hist-btn, .play-user-song-btn, .play-pl-btn')
       if (playBtn && !handled) {
         e.stopPropagation()

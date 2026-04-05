@@ -26,8 +26,45 @@ class MusicApp {
     this.performanceOptimizer = null;
   }
 
+  checkProtocol() {
+    const protocol = window.location.protocol;
+    if (protocol === 'file:') {
+      const warningDiv = document.createElement('div');
+      warningDiv.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: #e74c3c;
+        color: white;
+        padding: 20px;
+        z-index: 9999;
+        text-align: center;
+        font-size: 16px;
+      `;
+      warningDiv.innerHTML = `
+        <strong>⚠️ 错误：请使用 HTTP 服务器访问！</strong><br><br>
+        你正在使用 file:// 协议直接打开文件，这会导致上传等功能无法使用。<br><br>
+        <strong>正确的访问方式：</strong><br>
+        1. 确保服务器已启动 (node server.js)<br>
+        2. 在浏览器中访问：<a href="http://localhost:5500" style="color: white; text-decoration: underline;">http://localhost:5500</a>
+      `;
+      document.body.appendChild(warningDiv);
+      console.error('❌ 请使用 http://localhost:5500 访问网站，而不是直接打开 index.html 文件！');
+      return false;
+    }
+    return true;
+  }
+
   async initialize() {
+    console.log('MusicApp: initialize 开始执行');
+    
+    if (!this.checkProtocol()) {
+      return;
+    }
+    
     try {
+      console.log('MusicApp: 初始化数据系统...');
       await this.dataSystem.initialize();
       this.dataSyncManager = new DataSyncManager(this.dataSystem);
       this.dataSystem.setDataSyncManager(this.dataSyncManager);
@@ -39,7 +76,9 @@ class MusicApp {
       this.initializeTheme();
       this.setupPlayer();
       this.setupUI();
+      console.log('MusicApp: 准备调用 bindEvents...');
       this.bindEvents();
+      this.setupMobileNavigation();
       this.loadInitialData();
       this.loadUserSongs();
       this.renderUserSongsFeatured();
@@ -54,6 +93,22 @@ class MusicApp {
       console.error('初始化失败:', error);
       this.showError('初始化失败，请刷新页面重试');
     }
+  }
+
+  setupMobileNavigation() {
+    const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
+    
+    mobileNavItems.forEach(item => {
+      item.addEventListener('click', (e) => {
+        const page = e.currentTarget.dataset.page;
+        this.navigateTo(page);
+        
+        mobileNavItems.forEach(navItem => {
+          navItem.classList.remove('active');
+        });
+        e.currentTarget.classList.add('active');
+      });
+    });
   }
 
   initializeTheme() {
@@ -206,68 +261,45 @@ class MusicApp {
     const fullscreenVolumeBtn = document.getElementById('fullscreenVolumeBtn');
     const fullscreenVolumeSlider = document.getElementById('fullscreenVolumeSlider');
     const volumeSlider = document.getElementById('volumeSlider');
-    const lyricsTranslateBtn = document.getElementById('lyricsTranslateBtn');
-    const lyricsSizeBtn = document.getElementById('lyricsSizeBtn');
 
-    playerCoverClick.addEventListener('click', () => this.openFullscreenPlayer());
-    closeFullscreenBtn.addEventListener('click', () => this.closeFullscreenPlayer());
-    fullscreenPlayPauseBtn.addEventListener('click', () => this.player.togglePlay());
-    fullscreenPrevBtn.addEventListener('click', () => this.player.previous());
-    fullscreenNextBtn.addEventListener('click', () => this.player.next());
-    fullscreenShuffleBtn.addEventListener('click', () => this.player.toggleShuffle());
-    fullscreenRepeatBtn.addEventListener('click', () => this.player.toggleRepeat());
-    fullscreenProgressSlider.addEventListener('input', (e) => this.player.seekToPercent(e.target.value));
+    if (playerCoverClick) playerCoverClick.addEventListener('click', () => this.openFullscreenPlayer());
+    if (closeFullscreenBtn) closeFullscreenBtn.addEventListener('click', () => this.closeFullscreenPlayer());
+    if (fullscreenPlayPauseBtn) fullscreenPlayPauseBtn.addEventListener('click', () => this.player.togglePlay());
+    if (fullscreenPrevBtn) fullscreenPrevBtn.addEventListener('click', () => this.player.previous());
+    if (fullscreenNextBtn) fullscreenNextBtn.addEventListener('click', () => this.player.next());
+    if (fullscreenShuffleBtn) fullscreenShuffleBtn.addEventListener('click', () => this.player.toggleShuffle());
+    if (fullscreenRepeatBtn) fullscreenRepeatBtn.addEventListener('click', () => this.player.toggleRepeat());
+    if (fullscreenProgressSlider) fullscreenProgressSlider.addEventListener('input', (e) => this.player.seekToPercent(e.target.value));
 
-    fullscreenVolumeBtn.addEventListener('click', () => {
-      const currentVolume = this.player.volume;
-      if (currentVolume > 0) {
-        this.player.setVolume(0);
-        fullscreenVolumeBtn.textContent = '🔇';
-      } else {
-        this.player.setVolume(fullscreenVolumeSlider.value / 100);
-        fullscreenVolumeBtn.textContent = '🔊';
-      }
-    });
+    if (fullscreenVolumeBtn) {
+      fullscreenVolumeBtn.addEventListener('click', () => {
+        const currentVolume = this.player.volume;
+        if (currentVolume > 0) {
+          this.player.setVolume(0);
+          fullscreenVolumeBtn.textContent = '🔇';
+        } else {
+          this.player.setVolume(fullscreenVolumeSlider.value / 100);
+          fullscreenVolumeBtn.textContent = '🔊';
+        }
+      });
+    }
 
-    fullscreenVolumeSlider.addEventListener('input', (e) => {
-      const volume = e.target.value / 100;
-      this.player.setVolume(volume);
-      volumeSlider.value = e.target.value;
-      if (volume === 0) {
-        fullscreenVolumeBtn.textContent = '🔇';
-      } else if (volume < 0.5) {
-        fullscreenVolumeBtn.textContent = '🔉';
-      } else {
-        fullscreenVolumeBtn.textContent = '🔊';
-      }
-    });
-
-    let currentFontSize = 1;
-    const fontSizes = [0.8, 1, 1.2, 1.4, 1.6];
-    let fontSizeIndex = 1;
-
-    lyricsTranslateBtn.addEventListener('click', () => {
-      this.showInfo('歌词翻译功能开发中');
-    });
-
-    lyricsSizeBtn.addEventListener('click', () => {
-      fontSizeIndex = (fontSizeIndex + 1) % fontSizes.length;
-      const newSize = fontSizes[fontSizeIndex];
-      const lyricsContainer = document.getElementById('lyricsContainer');
-      lyricsContainer.style.fontSize = `${newSize}em`;
-      
-      if (newSize === 0.8) {
-        lyricsSizeBtn.textContent = 'A-';
-      } else if (newSize === 1) {
-        lyricsSizeBtn.textContent = 'A';
-      } else if (newSize === 1.2) {
-        lyricsSizeBtn.textContent = 'A+';
-      } else if (newSize === 1.4) {
-        lyricsSizeBtn.textContent = 'A++';
-      } else {
-        lyricsSizeBtn.textContent = 'A+++';
-      }
-    });
+    if (fullscreenVolumeSlider) {
+      fullscreenVolumeSlider.addEventListener('input', (e) => {
+        const volume = e.target.value / 100;
+        this.player.setVolume(volume);
+        if (volumeSlider) volumeSlider.value = e.target.value;
+        if (fullscreenVolumeBtn) {
+          if (volume === 0) {
+            fullscreenVolumeBtn.textContent = '🔇';
+          } else if (volume < 0.5) {
+            fullscreenVolumeBtn.textContent = '🔉';
+          } else {
+            fullscreenVolumeBtn.textContent = '🔊';
+          }
+        }
+      });
+    }
   }
 
   openFullscreenPlayer() {
@@ -347,12 +379,6 @@ class MusicApp {
         fullscreenProgressFill.style.width = `${data.progress}%`;
         fullscreenProgressSlider.value = data.progress;
         this.updateLyricsHighlight(data.currentTime);
-        break;
-      case 'play':
-        fullscreenPlayPauseBtn.textContent = '⏸️';
-        break;
-      case 'pause':
-        fullscreenPlayPauseBtn.textContent = '▶️';
         break;
       case 'songLoaded':
         this.currentSong = data;
@@ -505,7 +531,16 @@ class MusicApp {
 
   navigateTo(page) {
     const navItems = document.querySelectorAll('.nav-item');
+    const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
+    
     navItems.forEach(item => {
+      item.classList.remove('active');
+      if (item.dataset.page === page) {
+        item.classList.add('active');
+      }
+    });
+    
+    mobileNavItems.forEach(item => {
       item.classList.remove('active');
       if (item.dataset.page === page) {
         item.classList.add('active');
@@ -624,20 +659,31 @@ class MusicApp {
     );
     
     featuredList.innerHTML = sortedUserSongs.map(song => `
-      <div class="user-song-featured-item" data-id="${song.id}">
+      <div class="song-item" data-id="${song.id}">
         <img data-src="${song.cover}" alt="${song.title}" class="lazy-image">
-        <div class="featured-info">
+        <div class="song-info">
           <h3>${song.title}</h3>
-          <p>${song.artist}</p>
+          <p>${song.artist} - ${song.album || '未知专辑'}</p>
           <span class="upload-date">上传于 ${new Date(song.uploadedAt).toLocaleDateString()}</span>
+        </div>
+        <div class="song-actions">
+          <button class="action-btn play-btn" data-id="${song.id}" title="播放">▶️</button>
+          <button class="action-btn add-fav-btn" data-id="${song.id}" title="添加到收藏">🤍</button>
         </div>
       </div>
     `).join('');
 
-    featuredList.querySelectorAll('.user-song-featured-item').forEach(item => {
-      item.addEventListener('click', (e) => {
-        const songId = e.currentTarget.dataset.id;
+    featuredList.querySelectorAll('.play-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const songId = e.target.dataset.id;
         this.playSongById(songId);
+      });
+    });
+    
+    featuredList.querySelectorAll('.add-fav-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const songId = e.target.dataset.id;
+        this.addSongToFavorites(songId);
       });
     });
     
@@ -917,7 +963,61 @@ class MusicApp {
   playSongById(songId) {
     const song = this.getSongById(songId);
     if (song) {
-      this.playerUI.playSong(song);
+      // 如果当前播放的就是这首歌,则切换播放/暂停状态
+      if (this.player.currentSong && this.player.currentSong.id === songId) {
+        this.player.togglePlay();
+      } else {
+        // 否则播放新歌
+        this.playerUI.playSong(song);
+      }
+    }
+  }
+
+  updateAllPlayButtons() {
+    const isPlaying = this.player.isPlaying;
+    const currentSongId = this.player.currentSong?.id;
+    
+    // 更新所有歌曲列表播放按钮
+    document.querySelectorAll('.play-btn, .play-user-song-btn, .carousel-play-btn').forEach(btn => {
+      const btnSongId = btn.dataset.id || btn.getAttribute('data-song-id');
+      
+      if (btnSongId === currentSongId) {
+        // 当前播放的歌曲按钮显示暂停图标
+        if (btn.classList.contains('carousel-play-btn')) {
+          const playIcon = btn.querySelector('.play-icon');
+          const playText = btn.querySelector('.play-text');
+          if (playIcon) playIcon.textContent = isPlaying ? '⏸' : '▶';
+          if (playText) playText.textContent = isPlaying ? '暂停' : '播放';
+        } else {
+          btn.textContent = isPlaying ? '⏸️' : '▶️';
+          btn.title = isPlaying ? '暂停' : '播放';
+        }
+      } else {
+        // 其他歌曲按钮显示播放图标
+        if (btn.classList.contains('carousel-play-btn')) {
+          const playIcon = btn.querySelector('.play-icon');
+          const playText = btn.querySelector('.play-text');
+          if (playIcon) playIcon.textContent = '▶';
+          if (playText) playText.textContent = '播放';
+        } else {
+          btn.textContent = '▶️';
+          btn.title = '播放';
+        }
+      }
+    });
+    
+    // 更新底部播放器播放按钮
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    if (playPauseBtn) {
+      playPauseBtn.textContent = isPlaying ? '⏸️' : '▶️';
+      playPauseBtn.title = isPlaying ? '暂停' : '播放';
+    }
+    
+    // 更新全屏播放器播放按钮
+    const fullscreenPlayPauseBtn = document.getElementById('fullscreenPlayPauseBtn');
+    if (fullscreenPlayPauseBtn) {
+      fullscreenPlayPauseBtn.textContent = isPlaying ? '⏸️' : '▶️';
+      fullscreenPlayPauseBtn.title = isPlaying ? '暂停' : '播放';
     }
   }
 
@@ -1255,41 +1355,67 @@ class MusicApp {
   bindUploadEvents() {
     const uploadArea = document.getElementById('uploadArea');
     const audioFileInput = document.getElementById('audioFileInput');
-    const selectAudioBtn = document.getElementById('selectAudioBtn');
-    const coverFileInput = document.getElementById('coverFileInput');
     const selectCoverBtn = document.getElementById('selectCoverBtn');
-    const lyricsFileInput = document.getElementById('lyricsFileInput');
+    const coverFileInput = document.getElementById('coverFileInput');
     const selectLyricsBtn = document.getElementById('selectLyricsBtn');
+    const lyricsFileInput = document.getElementById('lyricsFileInput');
     const cancelUploadBtn = document.getElementById('cancelUploadBtn');
     const confirmUploadBtn = document.getElementById('confirmUploadBtn');
 
-    selectAudioBtn.addEventListener('click', () => audioFileInput.click());
-    selectCoverBtn.addEventListener('click', () => coverFileInput.click());
-    selectLyricsBtn.addEventListener('click', () => lyricsFileInput.click());
+    // 只绑定必要的事件 - 文件选择变化和其他按钮
+    if (audioFileInput) {
+      audioFileInput.addEventListener('change', (e) => this.handleAudioFileSelect(e));
+    }
+    
+    if (selectCoverBtn && coverFileInput) {
+      selectCoverBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        coverFileInput.click();
+      });
+    }
+    
+    if (coverFileInput) {
+      coverFileInput.addEventListener('change', (e) => this.handleCoverFileSelect(e));
+    }
+    
+    if (selectLyricsBtn && lyricsFileInput) {
+      selectLyricsBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        lyricsFileInput.click();
+      });
+    }
+    
+    if (lyricsFileInput) {
+      lyricsFileInput.addEventListener('change', (e) => this.handleLyricsFileSelect(e));
+    }
 
-    audioFileInput.addEventListener('change', (e) => this.handleAudioFileSelect(e));
-    coverFileInput.addEventListener('change', (e) => this.handleCoverFileSelect(e));
-    lyricsFileInput.addEventListener('change', (e) => this.handleLyricsFileSelect(e));
+    // 拖拽功能
+    if (uploadArea) {
+      uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+      });
+      uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('dragover');
+      });
+      uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        uploadArea.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          this.handleAudioFile(files[0]);
+        }
+      });
+    }
 
-    uploadArea.addEventListener('click', () => audioFileInput.click());
-    uploadArea.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      uploadArea.classList.add('dragover');
-    });
-    uploadArea.addEventListener('dragleave', () => {
-      uploadArea.classList.remove('dragover');
-    });
-    uploadArea.addEventListener('drop', (e) => {
-      e.preventDefault();
-      uploadArea.classList.remove('dragover');
-      const files = e.dataTransfer.files;
-      if (files.length > 0) {
-        this.handleAudioFile(files[0]);
-      }
-    });
-
-    cancelUploadBtn.addEventListener('click', () => this.cancelUpload());
-    confirmUploadBtn.addEventListener('click', () => this.confirmUpload());
+    if (cancelUploadBtn) {
+      cancelUploadBtn.addEventListener('click', () => this.cancelUpload());
+    }
+    
+    if (confirmUploadBtn) {
+      confirmUploadBtn.addEventListener('click', () => this.confirmUpload());
+    }
   }
 
   handleAudioFileSelect(e) {
@@ -1793,16 +1919,37 @@ class MusicApp {
 
     if (userSongs.length === 0) {
       const defaultSlides = [
-        { emoji: '🎵', title: '享受音乐时光', desc: '让旋律陪伴您的每一天' },
-        { emoji: '🎶', title: '分享您的收藏', desc: '上传喜爱的歌曲，珍藏美好回忆' },
-        { emoji: '💿', title: '创建专属歌单', desc: '按心情分类，随时切换不同风格' },
-        { emoji: '🎧', title: '沉浸式体验', desc: '高品质音频，感受每一个音符' }
+        { 
+          emoji: '✨', 
+          title: '开启音乐之旅', 
+          desc: '发现您的下一首最爱',
+          subtitle: 'Ready to groove?'
+        },
+        { 
+          emoji: '🎸', 
+          title: '上传您的歌曲', 
+          desc: '与世界分享您的音乐品味',
+          subtitle: 'Drop it like it\'s hot'
+        },
+        { 
+          emoji: '🎼', 
+          title: '打造完美歌单', 
+          desc: '根据心情和场景自由组合',
+          subtitle: 'Mix it up!'
+        },
+        { 
+          emoji: '🌟', 
+          title: '沉浸在音乐中', 
+          desc: '高品质播放，让每一秒都精彩',
+          subtitle: 'Feel the vibe'
+        }
       ];
 
       track.innerHTML = defaultSlides.map((slide, index) => `
         <div class="carousel-slide" style="background: ${gradients[index % gradients.length]}">
           <div class="carousel-content">
             <div class="carousel-emoji">${slide.emoji}</div>
+            <p class="carousel-subtitle">${slide.subtitle}</p>
             <h2>${slide.title}</h2>
             <p>${slide.desc}</p>
           </div>
@@ -1817,10 +1964,14 @@ class MusicApp {
               <img src="${song.cover || 'assets/images/default-cover.svg'}" alt="${song.title}">
             </div>
             <div class="carousel-song-info">
+              <p class="carousel-subtitle">🎵 正在播放</p>
               <h2>${song.title}</h2>
               <p>${song.artist}</p>
               ${song.category ? `<span class="song-category">${this.getCategoryName(song.category)}</span>` : ''}
-              <button class="carousel-play-btn" data-song-id="${song.id}">▶️</button>
+              <button class="carousel-play-btn" data-song-id="${song.id}">
+                <span class="play-icon">▶</span>
+                <span class="play-text">播放</span>
+              </button>
             </div>
           </div>
         </div>
@@ -1937,12 +2088,11 @@ class MusicApp {
     const songDetailAlbum = document.getElementById('songDetailAlbum');
     const songDetailReleaseDate = document.getElementById('songDetailReleaseDate');
     const songDetailPlayCount = document.getElementById('songDetailPlayCount');
-    const songDetailCreditTitle = document.getElementById('songDetailCreditTitle');
     const songDetailAlbumDesc = document.getElementById('songDetailAlbumDesc');
+    const songDetailLyrics = document.getElementById('songDetailLyrics');
 
     songDetailCover.querySelector('img').src = song.cover || 'assets/images/default-cover.svg';
     songDetailTitle.textContent = song.title;
-    songDetailCreditTitle.textContent = song.title;
     songDetailAlbum.textContent = song.album || '未知专辑';
     
     const history = this.dataSystem.getHistory();
@@ -1955,7 +2105,30 @@ class MusicApp {
 
     songDetailAlbumDesc.textContent = song.description || '暂无专辑简介';
 
+    this.loadSongDetailLyrics(song);
+
     this.navigateTo('songDetail');
+  }
+
+  loadSongDetailLyrics(song) {
+    const songDetailLyrics = document.getElementById('songDetailLyrics');
+    let lyrics = [];
+
+    if (!songDetailLyrics) return;
+
+    if (song.lyrics && song.lyrics.trim().length > 0) {
+      const uploadManager = this.dataSystem.getFileUploadManager();
+      lyrics = uploadManager.parseLRC(song.lyrics);
+    }
+
+    if (lyrics.length === 0) {
+      songDetailLyrics.innerHTML = '<p class="lyric-line">暂无歌词</p>';
+      return;
+    }
+
+    songDetailLyrics.innerHTML = lyrics.map((lyric, index) => 
+      `<p class="lyric-line" data-index="${index}" data-time="${lyric.time}">${lyric.text}</p>`
+    ).join('');
   }
 
   renderUserSongsFeatured() {
@@ -1963,31 +2136,60 @@ class MusicApp {
     const uploadManager = this.dataSystem.getFileUploadManager();
     const userSongs = uploadManager.getUserSongs();
     
-    if (userSongs.length === 0) {
+    if (!Array.isArray(userSongs) || userSongs.length === 0) {
       userSongsFeaturedList.innerHTML = `
         <div class="empty-state">
-          <p>暂无上传歌曲</p>
+          <p>暂无上传歌曲，去上传一首吧！</p>
         </div>
       `;
       return;
     }
     
-    userSongsFeaturedList.innerHTML = userSongs.slice(0, 6).map(song => `
-      <div class="featured-item" data-id="${song.id}">
-        <img src="${song.cover}" alt="${song.title}">
-        <div class="featured-info">
+    const sortedUserSongs = [...userSongs].sort((a, b) => 
+      new Date(b.uploadedAt) - new Date(a.uploadedAt)
+    );
+    
+    userSongsFeaturedList.innerHTML = sortedUserSongs.map(song => `
+      <div class="song-item" data-id="${song.id}">
+        <img data-src="${song.cover}" alt="${song.title}" class="lazy-image">
+        <div class="song-info">
           <h3>${song.title}</h3>
-          <p>${song.artist}</p>
+          <p>${song.artist} - ${song.album || '未知专辑'}</p>
+          <span class="upload-date">上传于 ${new Date(song.uploadedAt).toLocaleDateString()}</span>
+        </div>
+        <div class="song-actions">
+          <button class="action-btn play-btn" data-id="${song.id}" title="播放">▶️</button>
+          <button class="action-btn add-fav-btn" data-id="${song.id}" title="添加到收藏">🤍</button>
         </div>
       </div>
     `).join('');
 
-    userSongsFeaturedList.querySelectorAll('.featured-item').forEach(item => {
+    userSongsFeaturedList.querySelectorAll('.play-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const songId = e.target.dataset.id;
+        this.playSongById(songId);
+      });
+    });
+    
+    userSongsFeaturedList.querySelectorAll('.add-fav-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const songId = e.target.dataset.id;
+        this.addSongToFavorites(songId);
+      });
+    });
+    
+    userSongsFeaturedList.querySelectorAll('.song-item').forEach(item => {
       item.addEventListener('click', (e) => {
         const songId = e.currentTarget.dataset.id;
         this.openSongDetail(songId);
       });
     });
+    
+    if (typeof lazyImageLoader !== 'undefined') {
+      lazyImageLoader.observeAll('.lazy-image');
+    }
   }
 
   bindDataManagementEvents() {

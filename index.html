@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/player.css">
   <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/mobile.css">
 </head>
 
 <body>
@@ -100,13 +101,14 @@
         </div>
 
         <div class="upload-section">
-          <div class="upload-area" id="uploadArea">
+          <div class="upload-area" id="uploadArea" onclick="document.getElementById('audioFileInput').click()">
             <div class="upload-icon">📁</div>
             <h3>点击或拖拽文件到此处</h3>
             <p>支持 MP3, WAV, OGG, FLAC 格式音频文件</p>
             <input type="file" id="audioFileInput" accept="audio/mp3,audio/mpeg,audio/wav,audio/ogg,audio/flac"
               style="display: none;">
-            <button id="selectAudioBtn" class="btn-primary">选择音频文件</button>
+            <button id="selectAudioBtn" class="btn-primary"
+              onclick="event.stopPropagation(); document.getElementById('audioFileInput').click()">选择音频文件</button>
           </div>
         </div>
 
@@ -292,26 +294,10 @@
                 </button>
               </div>
 
-              <div class="song-detail-credits">
-                <h3 id="songDetailCreditTitle">歌曲标题</h3>
-                <div class="credit-list">
-                  <p><span class="credit-label">词：</span><span id="songDetailLyricist">未知</span></p>
-                  <p><span class="credit-label">曲：</span><span id="songDetailComposer">未知</span></p>
-                  <p><span class="credit-label">编曲：</span><span id="songDetailArranger">未知</span></p>
-                  <p><span class="credit-label">制作人：</span><span id="songDetailProducer">未知</span></p>
-                  <p><span class="credit-label">键盘：</span><span id="songDetailKeyboard">未知</span></p>
-                  <p><span class="credit-label">吉他：</span><span id="songDetailGuitar">未知</span></p>
-                  <p><span class="credit-label">贝斯：</span><span id="songDetailBass">未知</span></p>
-                  <p><span class="credit-label">和声编写/和声：</span><span id="songDetailHarmony">未知</span></p>
-                  <p><span class="credit-label">混音：</span><span id="songDetailMixing">未知</span></p>
-                  <p><span class="credit-label">母带：</span><span id="songDetailMastering">未知</span></p>
-                  <p><span class="credit-label">监制：</span><span id="songDetailSupervisor">未知</span></p>
-                  <p><span class="credit-label">出品人：</span><span id="songDetailPublisher">未知</span></p>
-                  <p><span class="credit-label">制作公司&OP：</span><span id="songDetailCompany">未知</span></p>
-                </div>
-                <div class="song-detail-copyright">
-                  <p>【未经著作权人许可不得翻唱翻录或使用】</p>
-                  <p id="songDetailCopyright">暂无版权信息</p>
+              <div class="song-detail-lyrics-section">
+                <h3>歌词</h3>
+                <div class="song-detail-lyrics" id="songDetailLyrics">
+                  <p class="lyric-line">暂无歌词</p>
                 </div>
               </div>
             </div>
@@ -322,46 +308,34 @@
 
     <div id="fullscreenPlayer" class="fullscreen-player">
       <div class="fullscreen-player-bg" id="fullscreenPlayerBg"></div>
-      <div class="player-decoration player-deco-1">🎵</div>
-      <div class="player-decoration player-deco-2">🎶</div>
-      <div class="player-decoration player-deco-3">♪</div>
-      <div class="player-decoration player-deco-4">♫</div>
-      <div class="player-decoration player-deco-5">✨</div>
-      <div class="fullscreen-player-content">
-        <button id="closeFullscreenBtn" class="close-fullscreen-btn">✕</button>
+      <div class="fullscreen-player-overlay"></div>
 
-        <div class="fullscreen-main-layout">
-          <div class="fullscreen-left-panel">
-            <div class="fullscreen-cover-container">
-              <div class="fullscreen-cover" id="fullscreenCover">
+      <div class="fullscreen-player-content">
+        <button id="closeFullscreenBtn" class="close-fullscreen-btn">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+
+        <div class="player-main-section">
+          <div class="album-display">
+            <div class="album-cover-container">
+              <div class="album-glow"></div>
+              <div class="album-vinyl" id="albumVinyl"></div>
+              <div class="album-cover" id="fullscreenCover">
                 <img src="assets/images/default-cover.svg" alt="专辑封面">
               </div>
             </div>
 
-            <div class="fullscreen-info">
-              <h2 id="fullscreenTitle">未播放</h2>
+            <div class="song-info">
+              <h1 id="fullscreenTitle">未播放</h1>
               <p id="fullscreenArtist">选择一首歌曲开始播放</p>
-            </div>
-
-            <div class="fullscreen-mini-controls">
-              <button id="fullscreenShuffleBtn" class="fullscreen-control-btn" title="随机播放">🔀</button>
-              <button id="fullscreenPrevBtn" class="fullscreen-control-btn" title="上一首">⏮️</button>
-              <button id="fullscreenPlayPauseBtn" class="fullscreen-control-btn play-pause" title="播放/暂停">▶️</button>
-              <button id="fullscreenNextBtn" class="fullscreen-control-btn" title="下一首">⏭️</button>
-              <button id="fullscreenRepeatBtn" class="fullscreen-control-btn" title="循环模式">🔁</button>
             </div>
           </div>
 
-          <div class="fullscreen-right-panel">
-            <div class="lyrics-header">
-              <h3>歌词</h3>
-              <div class="lyrics-toggle-container">
-                <button id="lyricsTranslateBtn" class="lyrics-toggle-btn" title="翻译">🌐</button>
-                <button id="lyricsSizeBtn" class="lyrics-toggle-btn" title="字号">A</button>
-              </div>
-            </div>
-
-            <div class="fullscreen-lyrics" id="fullscreenLyrics">
+          <div class="lyrics-display">
+            <div class="lyrics-scroll" id="fullscreenLyrics">
               <div class="lyrics-container" id="lyricsContainer">
                 <p class="lyric-line">暂无歌词</p>
               </div>
@@ -369,20 +343,84 @@
           </div>
         </div>
 
-        <div class="fullscreen-bottom-controls">
-          <div class="fullscreen-progress">
-            <span id="fullscreenCurrentTime">0:00</span>
-            <div class="fullscreen-progress-bar">
-              <div class="fullscreen-progress-fill" id="fullscreenProgressFill"></div>
-              <input type="range" id="fullscreenProgressSlider" min="0" max="100" value="0" step="0.1">
+        <div class="player-controls-section">
+          <div class="progress-container">
+            <span class="time-current" id="fullscreenCurrentTime">0:00</span>
+            <div class="progress-bar-wrapper">
+              <div class="progress-bar-bg"></div>
+              <div class="progress-bar-fill" id="fullscreenProgressFill"></div>
+              <input type="range" class="progress-slider" id="fullscreenProgressSlider" min="0" max="100" value="0"
+                step="0.1">
             </div>
-            <span id="fullscreenDuration">0:00</span>
+            <span class="time-total" id="fullscreenDuration">0:00</span>
           </div>
 
-          <div class="bottom-right-controls">
-            <div class="fullscreen-volume">
-              <button id="fullscreenVolumeBtn" class="fullscreen-control-btn" title="音量">🔊</button>
-              <input type="range" id="fullscreenVolumeSlider" min="0" max="100" value="80" step="1">
+          <div class="controls-row">
+            <div class="controls-left">
+              <button id="fullscreenShuffleBtn" class="control-btn" title="随机播放">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="16 3 21 3 21 8"></polyline>
+                  <line x1="4" y1="20" x2="21" y2="3"></line>
+                  <polyline points="21 16 21 21 16 21"></polyline>
+                  <line x1="15" y1="15" x2="21" y2="21"></line>
+                  <line x1="4" y1="4" x2="9" y2="9"></line>
+                </svg>
+              </button>
+              <button id="fullscreenRepeatBtn" class="control-btn" title="循环模式">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="17 1 21 5 17 9"></polyline>
+                  <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+                  <polyline points="7 23 3 19 7 15"></polyline>
+                  <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+                </svg>
+              </button>
+            </div>
+
+            <div class="controls-center">
+              <button id="fullscreenPrevBtn" class="control-btn nav-btn" title="上一首">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="19 20 9 12 19 4 19 20"></polygon>
+                  <rect x="5" y="4" width="3" height="16" rx="1.5"></rect>
+                </svg>
+              </button>
+
+              <button id="fullscreenPlayPauseBtn" class="play-pause-btn" title="播放/暂停">
+                <svg class="play-icon" width="36" height="36" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="8 5 19 12 8 19 8 5"></polygon>
+                </svg>
+                <svg class="pause-icon" width="36" height="36" viewBox="0 0 24 24" fill="currentColor"
+                  style="display: none;">
+                  <rect x="6" y="4" width="4" height="16" rx="2"></rect>
+                  <rect x="14" y="4" width="4" height="16" rx="2"></rect>
+                </svg>
+              </button>
+
+              <button id="fullscreenNextBtn" class="control-btn nav-btn" title="下一首">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="5 4 15 12 5 20 5 4"></polygon>
+                  <rect x="16" y="4" width="3" height="16" rx="1.5"></rect>
+                </svg>
+              </button>
+            </div>
+
+            <div class="controls-right">
+              <div class="volume-wrapper">
+                <button id="fullscreenVolumeBtn" class="control-btn" title="音量">
+                  <svg class="volume-high-icon" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                  </svg>
+                  <svg class="volume-mute-icon" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" style="display: none;">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <line x1="23" y1="9" x2="17" y2="15"></line>
+                    <line x1="17" y1="9" x2="23" y2="15"></line>
+                  </svg>
+                </button>
+                <input type="range" class="volume-slider" id="fullscreenVolumeSlider" min="0" max="100" value="80"
+                  step="1">
+              </div>
             </div>
           </div>
         </div>
@@ -437,6 +475,29 @@
         </div>
       </div>
     </div>
+
+    <nav class="mobile-nav">
+      <button class="mobile-nav-item active" data-page="home">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">首页</span>
+      </button>
+      <button class="mobile-nav-item" data-page="upload">
+        <span class="nav-icon">📤</span>
+        <span class="nav-label">上传</span>
+      </button>
+      <button class="mobile-nav-item" data-page="favorites">
+        <span class="nav-icon">❤️</span>
+        <span class="nav-label">收藏</span>
+      </button>
+      <button class="mobile-nav-item" data-page="playlists">
+        <span class="nav-icon">📋</span>
+        <span class="nav-label">歌单</span>
+      </button>
+      <button class="mobile-nav-item" data-page="history">
+        <span class="nav-icon">⏰</span>
+        <span class="nav-label">历史</span>
+      </button>
+    </nav>
   </div>
 
   <div id="modal" class="modal">
@@ -458,6 +519,7 @@
   <script src="js/ui/EventManager.js"></script>
   <script src="js/ui/UploadUI.js"></script>
   <script src="js/ui/FullscreenPlayer.js"></script>
+  <script src="js/ui/MobileNavigation.js"></script>
   <script src="js/storage/HybridStorageManager.js"></script>
   <script src="js/storage/FavoritesManager.js"></script>
   <script src="js/storage/PlaylistManager.js"></script>

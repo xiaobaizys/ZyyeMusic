@@ -406,6 +406,11 @@ class PlayerUI {
   updatePlayState(isPlaying) {
     this.elements.playPauseBtn.textContent = isPlaying ? '⏸️' : '▶️'
     this.elements.cover.classList.toggle('playing', isPlaying)
+    
+    // 更新所有播放按钮
+    if (window.musicApp && window.musicApp.updateAllPlayButtons) {
+      window.musicApp.updateAllPlayButtons()
+    }
   }
 
   updateProgress(data) {
@@ -423,6 +428,11 @@ class PlayerUI {
     this.elements.artist.textContent = song.artist
     this.elements.cover.src = song.cover || 'assets/images/default-cover.svg'
     this.updateFavoriteButton()
+    
+    // 更新所有播放按钮
+    if (window.musicApp && window.musicApp.updateAllPlayButtons) {
+      window.musicApp.updateAllPlayButtons()
+    }
   }
 
   updateShuffleState(isShuffle) {
