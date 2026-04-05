@@ -165,24 +165,32 @@ class FileUploadManager {
     }
 
     try {
-      console.log('FileUploadManager: 开始读取文件...');
-      const dataUrl = await this.readFileAsDataURL(file);
-      console.log('FileUploadManager: 文件读取完成，大小:', dataUrl.length, '字符');
-      
       const songId = 'song_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
       const extension = this.getFileExtension(file.name);
       
-      let songUrl = dataUrl;
+      let songUrl = '';
+      let dataUrl = '';
       
       if (this.storage.serverAvailable && this.storage.useServer && this.storage.uploadFileToServer) {
+        console.log('FileUploadManager: 开始读取文件并上传到服务器...');
+        dataUrl = await this.readFileAsDataURL(file);
+        console.log('FileUploadManager: 文件读取完成，大小:', dataUrl.length, '字符');
+        
         console.log('FileUploadManager: 尝试上传到服务器...');
         const serverResult = await this.storage.uploadFileToServer('audio', dataUrl, extension);
         if (serverResult.success) {
           console.log('FileUploadManager: 服务器上传成功', serverResult.url);
           songUrl = serverResult.url;
         } else {
-          console.log('FileUploadManager: 服务器上传失败，使用 DataURL');
+          console.log('FileUploadManager: 服务器上传失败');
+          return { success: false, error: '服务器上传失败，请稍后重试' };
         }
+      } else {
+        console.log('FileUploadManager: 服务器不可用，无法存储大文件');
+        return { 
+          success: false, 
+          error: '当前环境不支持上传音频文件。请在本地运行服务器（node server.js）并访问 http://localhost:5500' 
+        };
       }
       
       const song = {
