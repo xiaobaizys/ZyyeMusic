@@ -158,6 +158,7 @@ class MusicApp {
   }
 
   setupUI() {
+    this.checkGitHubPages();
     this.initCarousel();
     this.renderFeaturedSongs();
     this.renderUserSongsFeatured();
@@ -165,6 +166,35 @@ class MusicApp {
     this.renderFavorites();
     this.renderPlaylists();
     this.renderHistory();
+  }
+
+  checkGitHubPages() {
+    const hostname = window.location.hostname;
+    const isGitHubPages = hostname.includes('github.io');
+    
+    if (isGitHubPages) {
+      const uploadPage = document.getElementById('uploadPage');
+      if (uploadPage) {
+        const warningDiv = document.createElement('div');
+        warningDiv.style.cssText = `
+          background: #fff3cd;
+          border: 1px solid #ffc107;
+          border-radius: 8px;
+          padding: 16px;
+          margin-bottom: 20px;
+          color: #856404;
+        `;
+        warningDiv.innerHTML = `
+          <strong>⚠️ 提示：GitHub Pages 环境</strong><br><br>
+          当前在 GitHub Pages 上运行，上传功能需要 Node.js 服务器支持。<br><br>
+          <strong>如需使用完整功能（包括上传）：</strong><br>
+          1. 克隆仓库到本地<br>
+          2. 运行 <code>node server.js</code><br>
+          3. 访问 <a href="http://localhost:5500" style="color: #0066cc;">http://localhost:5500</a>
+        `;
+        uploadPage.insertBefore(warningDiv, uploadPage.firstChild);
+      }
+    }
   }
 
   bindEvents() {

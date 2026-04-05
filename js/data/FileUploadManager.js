@@ -174,7 +174,7 @@ class FileUploadManager {
       
       let songUrl = dataUrl;
       
-      if (this.storage.uploadFileToServer) {
+      if (this.storage.serverAvailable && this.storage.useServer && this.storage.uploadFileToServer) {
         console.log('FileUploadManager: 尝试上传到服务器...');
         const serverResult = await this.storage.uploadFileToServer('audio', dataUrl, extension);
         if (serverResult.success) {
@@ -227,7 +227,7 @@ class FileUploadManager {
       
       let resultUrl = dataUrl;
       
-      if (this.storage.uploadFileToServer) {
+      if (this.storage.serverAvailable && this.storage.useServer && this.storage.uploadFileToServer) {
         const serverResult = await this.storage.uploadFileToServer('cover', dataUrl, extension);
         if (serverResult.success) {
           resultUrl = serverResult.url;

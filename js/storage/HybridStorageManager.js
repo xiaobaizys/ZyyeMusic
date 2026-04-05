@@ -20,26 +20,32 @@ class HybridStorageManager {
   }
 
   init() {
-    if (window.location.protocol === 'file:') {
-      console.log('检测到 file:// 协议，仅使用 LocalStorage');
+    const hostname = window.location.hostname;
+    const isGitHubPages = hostname.includes('github.io');
+    const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
+    
+    if (window.location.protocol === 'file:' || isGitHubPages) {
+      console.log('检测到静态托管环境（file:// 或 GitHub Pages），仅使用 LocalStorage');
       this.serverAvailable = false;
       this.useServer = false;
       return;
     }
 
-    try {
-      fetch('/api/load-data/test', { method: 'GET' })
-        .then(response => {
-          this.serverAvailable = response.ok;
-          console.log('服务器存储可用:', this.serverAvailable);
-        })
-        .catch(error => {
-          console.log('服务器存储不可用，使用 LocalStorage');
-          this.serverAvailable = false;
-        });
-    } catch (error) {
-      console.log('服务器存储不可用，使用 LocalStorage');
-      this.serverAvailable = false;
+    if (isLocalhost) {
+      try {
+        fetch('/api/load-data/test', { method: 'GET' })
+          .then(response => {
+            this.serverAvailable = response.ok;
+            console.log('服务器存储可用:', this.serverAvailable);
+          })
+          .catch(error => {
+            console.log('服务器存储不可用，使用 LocalStorage');
+            this.serverAvailable = false;
+          });
+      } catch (error) {
+        console.log('服务器存储不可用，使用 LocalStorage');
+        this.serverAvailable = false;
+      }
     }
   }
 
